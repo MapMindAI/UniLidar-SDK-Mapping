@@ -1,0 +1,62 @@
+services:
+  unilidar_sdk:
+    image: yeliudm/arm64-ros2humble-opencv4.8.1:latest
+    platform: linux/arm64
+    container_name: UniLidarSdk
+    privileged: true
+    network_mode: host
+    ipc: host
+    pid: host
+    environment:
+      ROS_DOMAIN_ID: "0"
+    volumes:
+      - /dev:/dev
+      - ~/work/unilidar_sdk2_bazel:/unilidar_sdk2_bazel
+    working_dir: /unilidar_sdk2_bazel
+    command:
+      - bash
+      - -lc
+      - |
+        echo '====> Starting UniLidarSdk'
+        MIN_VALID_UNIX_TIME=1735689600
+        while [ "$(date +%s)" -lt "$${MIN_VALID_UNIX_TIME}" ]; do
+          echo "Waiting for valid system time before starting UniLidarSdk: $(date -Is)"
+          sleep 1
+        done
+        source /opt/ros/humble/setup.bash
+        export LD_LIBRARY_PATH="/opt/ros/humble/lib:/opt/ros/humble/lib/x86_64-linux-gnu:${LD_LIBRARY_PATH:-}"
+        exec /unilidar_sdk2_bazel/docker_compose/unitree_lidar_sdk/unitree_lidar_rosnode --logtostderr=1 \
+        --stop_rotate_after_quit=true --cloud_accumulate_rings=25 --alpha_bais_bias=-0.014 --range_fix_a0=-0.0095 --range_fix_a1=-0.007
+
+  recorder:
+    image: yeliudm/arm64-ros2humble-opencv4.8.1:latest
+    platform: linux/arm64
+    container_name: Recorder
+    privileged: true
+    network_mode: host
+    ipc: host
+    pid: host
+    environment:
+      ROS_DOMAIN_ID: "0"
+    volumes:
+      - /dev:/dev
+      - ~/work/unilidar_sdk2_bazel:/unilidar_sdk2_bazel
+    working_dir: /unilidar_sdk2_bazel
+    command:
+      - bash
+      - -lc
+      - |
+        echo '====> Starting Recorder'
+        MIN_VALID_UNIX_TIME=1735689600
+        while [ "$(date +%s)" -lt "$${MIN_VALID_UNIX_TIME}" ]; do
+          echo "Waiting for valid system time before starting Recorder: $(date -Is)"
+          sleep 1
+        done
+        source /opt/ros/humble/setup.bash
+        export LD_LIBRARY_PATH="/opt/ros/humble/lib:/opt/ros/humble/lib/x86_64-linux-gnu:${LD_LIBRARY_PATH:-}"
+        mkdir -p '/unilidar_sdk2_bazel/data/rosbags'
+        BAG_NAME_SUFFIX=""
+        BAG_NAME="unilidar_record_$(date +%Y%m%d_%H%M%S)_$${BAG_NAME_SUFFIX}"
+        echo "Save to $${BAG_NAME}"
+        exec ros2 bag record -o "/unilidar_sdk2_bazel/data/rosbags/$${BAG_NAME}" \
+        /unilidar/imu /unilidar/cloud /camera/camera/depth/image_rect_raw
