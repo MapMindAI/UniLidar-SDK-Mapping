@@ -48,7 +48,8 @@ services:
         export LD_LIBRARY_PATH="/usr/local/lib:/opt/ros/humble/lib:/opt/ros/humble/lib/aarch64-linux-gnu:${LD_LIBRARY_PATH:-}"
         exec /opt/unilidar/mapping/map/mapping/ros_nodes/lidar_filter_unilidar_ros_main --threading=true \
           --topic_imu=/unilidar/imu \
-          --topic_lidar=/unilidar/cloud
+          --topic_lidar=/unilidar/cloud \
+          --log_receive_lidar_time_consumption=true
 
   global_mapping:
     image: yeliudm/arm64-ros2humble-opencv4.8.1:latest
