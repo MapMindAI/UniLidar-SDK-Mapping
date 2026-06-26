@@ -34,6 +34,7 @@ services:
     privileged: true
     stdin_open: true
     tty: true
+    cpuset: "6,7"
     volumes:
       - /dev:/dev
       - ${MAPPING_PACKAGE_DIR:?set MAPPING_PACKAGE_DIR to the extracted mapping package path}:/opt/unilidar/mapping
@@ -56,6 +57,7 @@ services:
     privileged: true
     stdin_open: true
     tty: true
+    cpuset: "1, 2"
     volumes:
       - /dev:/dev
       - ${MAPPING_PACKAGE_DIR:?set MAPPING_PACKAGE_DIR to the extracted mapping package path}:/opt/unilidar/mapping
@@ -76,6 +78,7 @@ services:
     privileged: true
     stdin_open: true
     tty: true
+    cpuset: "4,5"
     environment:
       DISPLAY: ${DISPLAY:-:0}
       XDG_RUNTIME_DIR: ${XDG_RUNTIME_DIR:-/tmp/runtime-root}
