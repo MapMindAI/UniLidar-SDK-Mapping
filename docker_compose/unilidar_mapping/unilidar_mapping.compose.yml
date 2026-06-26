@@ -83,6 +83,9 @@ services:
       DISPLAY: ${DISPLAY:-:0}
       XDG_RUNTIME_DIR: ${XDG_RUNTIME_DIR:-/tmp/runtime-root}
       QT_X11_NO_MITSHM: "1"
+      LIBGL_ALWAYS_SOFTWARE: "1"
+      MESA_LOADER_DRIVER_OVERRIDE: llvmpipe
+      GALLIUM_DRIVER: llvmpipe
     volumes:
       - /dev:/dev
       - /tmp/.X11-unix:/tmp/.X11-unix
