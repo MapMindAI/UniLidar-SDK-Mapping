@@ -42,19 +42,6 @@ Real-time mapping result
 
 In my test setup, the RK3588 board is mounted on a mobile robot platform. The LiDAR is fixed on the robot and connected directly to the RK3588 board. The robot uses a 12V electric chassis as the mobile base.
 
-## Why This Project
-
-Directly running LiDAR mapping on embedded platforms can be inconvenient. Typical issues include:
-
-* Complicated dependency installation
-* Different ARM64 runtime environments
-* Unstable CPU frequency under load
-* Hard-to-debug LiDAR driver startup
-* Difficult remote operation on a mobile robot
-* Repeated manual commands during data collection
-
-This repository tries to simplify the deployment process by packaging the mapping runtime and providing helper scripts for ARM64 boards.
-
 ## Repository Structure
 
 ```text
@@ -114,8 +101,7 @@ This helps reduce frame drops, mapping instability, and latency spikes on embedd
 If you are using Docker Compose, enter the Docker Compose directory and start the services:
 
 ```bash
-cd docker_compose
-docker compose up -d
+bash docker_compose/unilidar_mapping/arm64_start_unilidar.sh
 ```
 
 Check running containers:
@@ -134,29 +120,7 @@ Replace `<container_name>` with the actual container name shown by `docker ps`.
 
 ## LiDAR Connection
 
-Before starting the mapping program, make sure the UniLidar device is connected and visible on the system.
-
-Check serial devices:
-
-```bash
-ls /dev/ttyUSB*
-```
-
-A typical device path is:
-
-```text
-/dev/ttyUSB0
-```
-
-If your LiDAR appears as a different device, update the corresponding configuration file or launch command.
-
-You may also need to grant permission:
-
-```bash
-sudo chmod 666 /dev/ttyUSB0
-```
-
-For a more permanent setup, configure udev rules for the LiDAR device.
+Check [UniLidar-SDK-Collection](https://github.com/MapMindAI/UniLidar-SDK-Collection)
 
 ## Runtime Data Flow
 
@@ -203,147 +167,6 @@ Set maximum frequency:
 ```bash
 sudo bash set_cpu_freq_max.sh
 ```
-
-## Web-Based Collection Workflow
-
-This project is designed to work with a web-based data collection and monitoring workflow.
-
-The web frontend can be used to:
-
-* Start or stop the UniLidar mapping service
-* Check container status
-* Refresh runtime logs
-* Monitor whether the LiDAR process is running correctly
-* Trigger data recording or upload
-* Simplify repeated experiments on a mobile robot
-
-This is useful when the RK3588 board is installed on a moving robot, where directly operating a terminal is inconvenient.
-
-## Mapping Notes
-
-For good mapping results, the following factors are important:
-
-### 1. Rigid sensor mounting
-
-The LiDAR must be firmly mounted on the robot. Any vibration or mechanical looseness will directly affect the point cloud and odometry quality.
-
-### 2. Stable power
-
-The RK3588 board and LiDAR should use a stable power source. Voltage drops may cause data loss, USB disconnects, or runtime crashes.
-
-### 3. Correct LiDAR orientation
-
-Make sure the coordinate frame used by the mapping backend matches the actual LiDAR mounting direction.
-
-### 4. CPU performance
-
-LiDAR-Inertial Odometry is sensitive to processing latency. On embedded boards, CPU frequency scaling may cause unstable runtime behavior. Setting the CPU frequency to maximum is recommended.
-
-### 5. Point cloud quality
-
-If the raw point cloud contains strong geometric distortion, the mapping result will also degrade. Always inspect the raw point cloud before tuning the LIO parameters.
-
-## Troubleshooting
-
-### Cannot find LiDAR device
-
-Check:
-
-```bash
-ls /dev/ttyUSB*
-```
-
-If no device appears:
-
-* Reconnect the LiDAR
-* Check USB cable
-* Check power supply
-* Check `dmesg`
-
-```bash
-dmesg | tail -n 50
-```
-
-### Permission denied on `/dev/ttyUSB0`
-
-Run:
-
-```bash
-sudo chmod 666 /dev/ttyUSB0
-```
-
-Or configure udev rules.
-
-### Mapping is slow or unstable
-
-Try:
-
-```bash
-sudo bash set_cpu_freq_max.sh
-```
-
-Also check:
-
-```bash
-top
-htop
-```
-
-Make sure the RK3588 board is not thermally throttling.
-
-### Docker container is not running
-
-Check containers:
-
-```bash
-docker ps -a
-```
-
-View logs:
-
-```bash
-docker logs -f <container_name>
-```
-
-Restart services:
-
-```bash
-cd docker_compose
-docker compose restart
-```
-
-### Point cloud appears distorted
-
-Possible causes:
-
-* Incorrect LiDAR coordinate frame
-* Wrong sensor mounting direction
-* Poor mechanical fixation
-* Timestamp issue
-* UniLidar intrinsic calibration error
-* Motion distortion without proper deskew
-
-Inspect the raw point cloud before changing LIO parameters.
-
-## Future Work
-
-Planned improvements:
-
-* Add clearer launch scripts for different RK3588 boards
-* Add web frontend documentation
-* Add example mapping videos and screenshots
-* Add UniLidar L2 calibration tools
-* Add rosbag recording examples
-* Add Fast-LIO configuration notes
-* Add benchmark results on RK3588
-* Add automatic startup service for robot deployment
-
-## Related Projects
-
-* UniLidar SDK
-* Fast-LIO / Fast-LIO2
-* ROS / ROS2
-* RK3588 embedded robotics platform
 
 ## License
 
