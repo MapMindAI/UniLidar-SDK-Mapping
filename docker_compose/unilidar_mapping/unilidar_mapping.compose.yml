@@ -33,6 +33,7 @@ services:
     privileged: true
     stdin_open: true
     tty: true
+    cpuset: "4,5,6,7"
     volumes:
       - /dev:/dev
       - ${MAPPING_PACKAGE_DIR:?set MAPPING_PACKAGE_DIR to the extracted mapping package path}:/opt/unilidar/mapping
