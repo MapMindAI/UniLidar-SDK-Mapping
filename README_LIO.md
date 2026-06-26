@@ -34,7 +34,7 @@ flowchart TB
 
     subgraph Visual_Pipeline["Optional: visual-inertial update"]
         IMG --> DIRECT[Direct image tracker]
-        DIRECT -->|pose / velocity| STATE
+        DIRECT -->|"pose / velocity"| STATE
     end
 
     MAP --> OUTPUT["Local map + trajectory"]
@@ -114,8 +114,8 @@ time using interpolated body poses.
 
 ```mermaid
 flowchart LR
-    A[Point at capture time t] -->|Lookup pose(t)| B[World frame]
-    B -->|T_current^-1| C[Point in current lidar frame]
+    A[Point at capture time t] -->|"Lookup pose at time t"| B[World frame]
+    B -->|"T_current^-1"| C[Point in current lidar frame]
 ```
 
 Three flavours are supported:
@@ -136,7 +136,7 @@ or unused.
 
 ```mermaid
 flowchart TB
-    A[Ring of range-ordered points] --> B[Mark breaks / occlusion / parallel beams]
+    A[Ring of range-ordered points] --> B["Mark breaks / occlusion / parallel beams"]
     B --> C[Compute curvature in sliding window]
     C --> D[Split ring into segments]
     D --> E[Pick max-curvature points as edges]
@@ -177,8 +177,8 @@ flowchart LR
     A[Source feature point] -->|Current pose| B[World-frame query point]
     B -->|k-NN search| C[k neighbours in local map]
     C --> D[PCA on neighbours]
-    D -->|smallest eigenvalue -> normal| E[Plane residual]
-    D -->|largest eigenvalue -> direction| F[Edge residual]
+    D -->|"smallest eigenvalue -> normal"| E[Plane residual]
+    D -->|"largest eigenvalue -> direction"| F[Edge residual]
 ```
 
 * **Plane residual**: the signed distance from the transformed point to the local plane:
@@ -250,7 +250,7 @@ direction drift.
 
 ```mermaid
 flowchart LR
-    A[New frame pose] -->|relative to last keyframe| B{translation > th_t or<br/>rotation > th_R?}
+    A[New frame pose] -->|relative to last keyframe| B{"translation > th_t or<br/>rotation > th_R?"}
     B -->|yes| C[Insert as keyframe]
     C --> D[Add features to local maps]
     D -->|every N keyframes| E[Clear points outside local range]
@@ -289,9 +289,9 @@ flowchart LR
         L[Lidar frame]
     end
 
-    L -->|T_base_to_imu| I
-    I -->|T_imu_to_world| W
-    L -->|T_lidar_to_world| W
+    L -->|"T_base_to_imu"| I
+    I -->|"T_imu_to_world"| W
+    L -->|"T_lidar_to_world"| W
 ```
 
 The extrinsic transform maps the lidar/base frame to the IMU frame. The lidar pose in world
@@ -431,7 +431,7 @@ pipeline to the sensor's packet format and characteristics.
 flowchart LR
     A[UniLiDAR ROS message] --> B[Parse ring, xyz, timestamp]
     B --> C[Per-ring timestamps]
-    C --> D[Per-point / per-ring demotion]
+    C --> D["Per-point / per-ring demotion"]
     D --> E[Dynamic-window feature extraction]
     E --> F[LIO update]
 ```
