@@ -49,6 +49,7 @@ services:
           --topic_imu=/unilidar/imu \
           --topic_lidar=/unilidar/cloud \
           --enable_ikfom_match_cache=true \
+          --imu_inverval=1e7 \
           --log_receive_lidar_time_consumption=true
 
   global_mapping:
