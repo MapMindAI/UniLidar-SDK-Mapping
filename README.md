@@ -10,6 +10,8 @@ The project focuses on making the full mapping pipeline easy to deploy, start, m
 
 UniLidar L2 is a compact 3D LiDAR that outputs point cloud and IMU data. In this project, the LiDAR is connected to an RK3588 computing board, and the mapping pipeline runs locally on the embedded device.
 
+![System Architecture](assets/system_architecture.svg)
+
 The system is intended for real robot data collection and mapping experiments, including:
 
 * UniLidar L2 data acquisition
@@ -158,7 +160,9 @@ For a more permanent setup, configure udev rules for the LiDAR device.
 
 ## Runtime Data Flow
 
-The runtime pipeline is:
+The runtime pipeline is shown below:
+
+![Data Flow](assets/data_flow.svg)
 
 ```text
 UniLidar L2
