@@ -1,6 +1,6 @@
 # UniLidar SDK Mapping
 
-Run LiDAR-Inertial Odometry on RK3588 with Unitree UniLidar L2.
+Run [LiDAR-Inertial Odometry](README_LIO.md) on RK3588 with Unitree UniLidar L2.
 
 This repository provides a lightweight deployment package for running UniLidar L2 data acquisition and LiDAR-Inertial Odometry on an ARM64 embedded platform, especially RK3588-based boards. It is designed for mobile robot mapping experiments using a low-cost 3D mechanical scanning LiDAR.
 
