@@ -21,7 +21,6 @@ services:
           echo "Waiting for valid system time before starting UniLidarSdk: $(date -Is)"
           sleep 1
         done
-        ls /opt/unilidar/mapping
         source /opt/ros/humble/setup.bash
         export LD_LIBRARY_PATH="/opt/unilidar/mapping/_solib_aarch64/_U@ros_Uhumble_S_S_Cros_Uhumble___Uaarch64:/opt/ros/humble/lib:/opt/ros/humble/lib/aarch64-linux-gnu:${LD_LIBRARY_PATH:-}"
         exec /opt/unilidar/mapping/third_party/unitree_lidar_sdk/unitree_lidar_rosnode --logtostderr=1 \
@@ -80,8 +79,13 @@ services:
     stdin_open: true
     tty: true
     cpuset: "1"
+    environment:
+      DISPLAY: ${DISPLAY:-:0}
+      XDG_RUNTIME_DIR: ${XDG_RUNTIME_DIR:-/tmp/runtime-root}
+      QT_X11_NO_MITSHM: "1"
     volumes:
       - /dev:/dev
+      - /tmp/.X11-unix:/tmp/.X11-unix
       - ${MAPPING_PACKAGE_DIR:?set MAPPING_PACKAGE_DIR to the extracted mapping package path}:/opt/unilidar/mapping
     working_dir: /opt/unilidar/mapping
     command:
