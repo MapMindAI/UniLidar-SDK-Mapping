@@ -6,6 +6,8 @@ This repository provides a lightweight deployment package for running UniLidar L
 
 The project focuses on making the full mapping pipeline easy to deploy, start, monitor, and debug on an embedded device.
 
+![System](assets/system.jpg)
+
 ## Overview
 
 UniLidar L2 is a compact 3D LiDAR that outputs point cloud and IMU data. In this project, the LiDAR is connected to an RK3588 computing board, and the mapping pipeline runs locally on the embedded device.
