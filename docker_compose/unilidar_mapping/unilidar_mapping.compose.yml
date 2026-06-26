@@ -9,7 +9,7 @@ services:
     cpuset: "0"
     volumes:
       - /dev:/dev
-      - ../../mapping:/opt/unilidar/mapping
+      - ${MAPPING_PACKAGE_DIR:?set MAPPING_PACKAGE_DIR to the extracted mapping package path}:/opt/unilidar/mapping
     working_dir: /opt/unilidar/mapping
     command:
       - bash
@@ -37,7 +37,7 @@ services:
     cpuset: "2,3"
     volumes:
       - /dev:/dev
-      - ../../mapping:/opt/unilidar/mapping
+      - ${MAPPING_PACKAGE_DIR:?set MAPPING_PACKAGE_DIR to the extracted mapping package path}:/opt/unilidar/mapping
     working_dir: /opt/unilidar/mapping
     command:
       - bash
@@ -60,7 +60,7 @@ services:
     cpuset: "1"
     volumes:
       - /dev:/dev
-      - ../../mapping:/opt/unilidar/mapping
+      - ${MAPPING_PACKAGE_DIR:?set MAPPING_PACKAGE_DIR to the extracted mapping package path}:/opt/unilidar/mapping
     working_dir: /opt/unilidar/mapping
     command:
       - bash
@@ -81,7 +81,7 @@ services:
     cpuset: "1"
     volumes:
       - /dev:/dev
-      - ../../mapping:/opt/unilidar/mapping
+      - ${MAPPING_PACKAGE_DIR:?set MAPPING_PACKAGE_DIR to the extracted mapping package path}:/opt/unilidar/mapping
     working_dir: /opt/unilidar/mapping
     command:
       - bash

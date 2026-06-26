@@ -32,8 +32,8 @@ echo "  url=${PACKAGE_URL}"
 echo "  archive=${TMP_ARCHIVE}"
 curl -fsSL "${PACKAGE_URL}" -o "${TMP_ARCHIVE}"
 
-mkdir -p ${REPO_ROOT}/mapping
-echo "Extracting package into ${REPO_ROOT}"
+mkdir -p "${REPO_ROOT}/mapping"
+echo "Extracting package into ${REPO_ROOT}/mapping"
 tar -xzf "${TMP_ARCHIVE}" -C "${REPO_ROOT}/mapping"
 
-echo "Package extracted to ${REPO_ROOT}"
+echo "Package extracted to ${REPO_ROOT}/mapping"
