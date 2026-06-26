@@ -32,7 +32,7 @@ if [[ ! -d "${MAPPING_PACKAGE_DIR}" ]]; then
   exit 1
 fi
 
-export MAPPING_PACKAGE_DIR
+export MAPPING_PACKAGE_DIR=${MAPPING_PACKAGE_DIR}
 
 docker compose \
   -p "${COMPOSE_PROJECT_NAME}" \
