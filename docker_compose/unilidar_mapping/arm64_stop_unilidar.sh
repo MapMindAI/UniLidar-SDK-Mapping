@@ -2,7 +2,7 @@
 set -euo pipefail
 
 if [ $# -ne 1 ]; then
-    COMPOSE_NAME="unilidar_collection"
+    COMPOSE_NAME="unilidar_mapping"
 else
     COMPOSE_NAME=$1
 fi

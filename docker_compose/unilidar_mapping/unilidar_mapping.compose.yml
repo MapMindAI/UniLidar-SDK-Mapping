@@ -1,0 +1,93 @@
+services:
+  unilidar_sdk:
+    image: yeliudm/arm64-ros2humble-opencv4.8.1:latest
+    platform: linux/arm64
+    container_name: UniLidarSdk
+    privileged: true
+    stdin_open: true
+    tty: true
+    cpuset: "0"
+    volumes:
+      - /dev:/dev
+      - ../../mapping:/opt/unilidar/mapping
+    working_dir: /opt/unilidar/mapping
+    command:
+      - bash
+      - -lc
+      - |
+        echo '====> Starting UniLidarSdk'
+        MIN_VALID_UNIX_TIME=1735689600
+        while [ "$(date +%s)" -lt "$${MIN_VALID_UNIX_TIME}" ]; do
+          echo "Waiting for valid system time before starting UniLidarSdk: $(date -Is)"
+          sleep 1
+        done
+        source /opt/ros/humble/setup.bash
+        export LD_LIBRARY_PATH="/opt/unilidar/mapping/_solib_aarch64/_U@ros_Uhumble_S_S_Cros_Uhumble___Uaarch64:/opt/ros/humble/lib:/opt/ros/humble/lib/aarch64-linux-gnu:${LD_LIBRARY_PATH:-}"
+        exec /opt/unilidar/mapping/third_party/unitree_lidar_sdk/unitree_lidar_rosnode --logtostderr=1 \
+          --stop_rotate_after_quit=true --cloud_accumulate_rings=25 --alpha_bais_bias=-0.014 \
+          --range_fix_a0=-0.0095 --range_fix_a1=-0.007
+
+  lidar_odometry:
+    image: yeliudm/arm64-ros2humble-opencv4.8.1:latest
+    platform: linux/arm64
+    container_name: LidarOdometry
+    privileged: true
+    stdin_open: true
+    tty: true
+    cpuset: "2,3"
+    volumes:
+      - /dev:/dev
+      - ../../mapping:/opt/unilidar/mapping
+    working_dir: /opt/unilidar/mapping
+    command:
+      - bash
+      - -lc
+      - |
+        echo '====> Starting LidarOdometry'
+        source /opt/ros/humble/setup.bash
+        export LD_LIBRARY_PATH="/usr/local/lib:/opt/ros/humble/lib:/opt/ros/humble/lib/aarch64-linux-gnu:${LD_LIBRARY_PATH:-}"
+        exec /opt/unilidar/mapping/map/mapping/ros_nodes/lidar_filter_unilidar_ros_main --threading=true \
+          --topic_imu=/unilidar/imu \
+          --topic_lidar=/unilidar/cloud
+
+  global_mapping:
+    image: yeliudm/arm64-ros2humble-opencv4.8.1:latest
+    platform: linux/arm64
+    container_name: GlobalMapping
+    privileged: true
+    stdin_open: true
+    tty: true
+    cpuset: "1"
+    volumes:
+      - /dev:/dev
+      - ../../mapping:/opt/unilidar/mapping
+    working_dir: /opt/unilidar/mapping
+    command:
+      - bash
+      - -lc
+      - |
+        echo '====> Starting GlobalMapping'
+        source /opt/ros/humble/setup.bash
+        export LD_LIBRARY_PATH="/usr/local/lib:/opt/ros/humble/lib:/opt/ros/humble/lib/aarch64-linux-gnu:${LD_LIBRARY_PATH:-}"
+        exec /opt/unilidar/mapping/map/mapping/ros_nodes/global_mapping_ros_main
+
+  visualizer:
+    image: yeliudm/arm64-ros2humble-opencv4.8.1:latest
+    platform: linux/arm64
+    container_name: Visualizer
+    privileged: true
+    stdin_open: true
+    tty: true
+    cpuset: "1"
+    volumes:
+      - /dev:/dev
+      - ../../mapping:/opt/unilidar/mapping
+    working_dir: /opt/unilidar/mapping
+    command:
+      - bash
+      - -lc
+      - |
+        echo '====> Starting Visualizer'
+        source /opt/ros/humble/setup.bash
+        export LD_LIBRARY_PATH="/usr/local/lib:/opt/ros/humble/lib:/opt/ros/humble/lib/aarch64-linux-gnu:${LD_LIBRARY_PATH:-}"
+        exec /opt/unilidar/mapping/map/mapping/ros_nodes/lidar_slam_ros_viewer_main
