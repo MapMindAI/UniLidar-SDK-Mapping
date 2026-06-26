@@ -6,7 +6,6 @@ services:
     privileged: true
     stdin_open: true
     tty: true
-    cpuset: "0"
     volumes:
       - /dev:/dev
       - ${MAPPING_PACKAGE_DIR:?set MAPPING_PACKAGE_DIR to the extracted mapping package path}:/opt/unilidar/mapping
@@ -34,7 +33,7 @@ services:
     privileged: true
     stdin_open: true
     tty: true
-    cpuset: "6,7"
+    cpuset: "4,5,6,7"
     volumes:
       - /dev:/dev
       - ${MAPPING_PACKAGE_DIR:?set MAPPING_PACKAGE_DIR to the extracted mapping package path}:/opt/unilidar/mapping
@@ -46,7 +45,7 @@ services:
         echo '====> Starting LidarOdometry'
         source /opt/ros/humble/setup.bash
         export LD_LIBRARY_PATH="/usr/local/lib:/opt/ros/humble/lib:/opt/ros/humble/lib/aarch64-linux-gnu:${LD_LIBRARY_PATH:-}"
-        exec /opt/unilidar/mapping/map/mapping/ros_nodes/lidar_filter_unilidar_ros_main --threading=true \
+        exec /opt/unilidar/mapping/map/mapping/ros_nodes/lidar_filter_unilidar_ros_main --threading_num=4 \
           --topic_imu=/unilidar/imu \
           --topic_lidar=/unilidar/cloud \
           --log_receive_lidar_time_consumption=true
@@ -58,7 +57,6 @@ services:
     privileged: true
     stdin_open: true
     tty: true
-    cpuset: "1,2"
     volumes:
       - /dev:/dev
       - ${MAPPING_PACKAGE_DIR:?set MAPPING_PACKAGE_DIR to the extracted mapping package path}:/opt/unilidar/mapping
@@ -79,7 +77,6 @@ services:
     privileged: true
     stdin_open: true
     tty: true
-    cpuset: "4,5"
     environment:
       DISPLAY: ${DISPLAY:-:0}
       XDG_RUNTIME_DIR: ${XDG_RUNTIME_DIR:-/tmp/runtime-root}
