@@ -44,6 +44,31 @@ Real-time mapping result
 
 In my test setup, the RK3588 board is mounted on a mobile robot platform. The LiDAR is fixed on the robot and connected directly to the RK3588 board. The robot uses a 12V electric chassis as the mobile base.
 
+<details>
+  <summary>Runtime Data Flow</summary>
+
+The runtime pipeline is shown below:
+
+![Data Flow](assets/data_flow.svg)
+
+```text
+UniLidar L2
+    ↓ raw data
+UniLidar SDK
+    ↓
+PointCloud2 + IMU
+    ↓
+LIO mapping backend
+    ↓
+Odometry + map
+    ↓
+Visualization / recording / web monitoring
+```
+
+The mapping backend uses the LiDAR point cloud and IMU stream to estimate robot motion and build a local 3D map.
+
+</details>
+
 ## Repository Structure
 
 ```text
@@ -67,86 +92,8 @@ UniLidar-SDK-Mapping/
 
 ## Quick Start
 
-### 1. Clone the repository
-
-```bash
-git clone https://github.com/MapMindAI/UniLidar-SDK-Mapping.git
-cd UniLidar-SDK-Mapping
-```
-
-### 2. Download the ARM64 mapping package
-
-```bash
-bash download_arm64_app_package.sh
-```
-
-This will download the prebuilt mapping package and extract it into the local `mapping/` directory.
-
-### 3. Check CPU frequency
-
-```bash
-bash check_current_cpu_freq.sh
-```
-
-For real-time LiDAR mapping, it is recommended to keep the CPU running at maximum frequency.
-
-### 4. Set CPU frequency to maximum
-
-```bash
-sudo bash set_cpu_freq_max.sh
-```
-
-This helps reduce frame drops, mapping instability, and latency spikes on embedded devices.
-
-### 5. Start the mapping runtime
-
-If you are using Docker Compose, enter the Docker Compose directory and start the services:
-
-```bash
-bash docker_compose/unilidar_mapping/arm64_start_unilidar.sh
-```
-
-Check running containers:
-
-```bash
-docker ps
-```
-
-View logs:
-
-```bash
-docker logs -f <container_name>
-```
-
-Replace `<container_name>` with the actual container name shown by `docker ps`.
-
-## LiDAR Connection
-
-Check [UniLidar-SDK-Collection](https://github.com/MapMindAI/UniLidar-SDK-Collection)
-
-## Runtime Data Flow
-
-The runtime pipeline is shown below:
-
-![Data Flow](assets/data_flow.svg)
-
-```text
-UniLidar L2
-    ↓ raw data
-UniLidar SDK
-    ↓
-PointCloud2 + IMU
-    ↓
-LIO mapping backend
-    ↓
-Odometry + map
-    ↓
-Visualization / recording / web monitoring
-```
-
-The mapping backend uses the LiDAR point cloud and IMU stream to estimate robot motion and build a local 3D map.
-
-## Recommended RK3588 Settings
+<details>
+  <summary>Recommended RK3588 Settings</summary>
 
 For better real-time performance:
 
@@ -169,6 +116,54 @@ Set maximum frequency:
 ```bash
 sudo bash set_cpu_freq_max.sh
 ```
+
+</details>
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/MapMindAI/UniLidar-SDK-Mapping.git
+cd UniLidar-SDK-Mapping
+```
+
+### 2. Download the ARM64 mapping package
+
+```bash
+bash download_arm64_app_package.sh
+```
+
+This will download the prebuilt mapping package and extract it into the local `mapping/` directory.
+
+### 3. Start the mapping runtime
+
+If you are using Docker Compose, enter the Docker Compose directory and start the services:
+
+```bash
+bash docker_compose/unilidar_mapping/arm64_start_unilidar.sh
+```
+
+<details>
+  <summary>Docker Debug</summary>
+
+Check running containers:
+
+```bash
+docker ps
+```
+
+View logs:
+
+```bash
+docker logs -f <container_name>
+```
+
+Replace `<container_name>` with the actual container name shown by `docker ps`.
+
+</details>
+
+## LiDAR Connection
+
+Check [UniLidar-SDK-Collection](https://github.com/MapMindAI/UniLidar-SDK-Collection)
 
 ## License
 
