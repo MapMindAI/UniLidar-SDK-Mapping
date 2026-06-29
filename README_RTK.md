@@ -113,9 +113,6 @@ The device logs one record per second as a tab-separated text file with a Chines
 **Parsing notes:**
 - A new record starts on any line matching `YYYY-M-D HH:MM:SS.mmm`.
 - The longitude, latitude, altitude, and fix-status fields are on the **3rd line** of each record (index 2), tab-separated starting at field index 5.
-- Example values: longitude `113.514471309`, latitude `22.781325914`, fix `4：固定解`.
-
-Sample data: [`data/20260629161730.txt`](data/20260629161730.txt)
 
 ---
 
